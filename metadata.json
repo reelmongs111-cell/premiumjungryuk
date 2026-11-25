@@ -1,0 +1,8 @@
+{
+  "name": "AUREUM SEOUL | 프리미엄 한국 중년 남성 라이프스타일",
+  "description": "40~60대 대한민국 중년 남성의 건강한 활력과 품격 있는 일상을 위한 프리미엄 라이프스타일 및 웰니스 브랜드 아우레움 서울.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
