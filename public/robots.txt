@@ -10,4 +10,4 @@ User-agent: Googlebot
 Allow: /
 Disallow: /api/
 
-Sitemap: https://ais-dev-qqdodvcmphbf4x73jjyqzm-1003992167908.asia-southeast1.run.app/sitemap.xml
+Sitemap: https://powerwang.xyz/sitemap.xml

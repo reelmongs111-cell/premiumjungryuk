@@ -1,7 +1,6 @@
 import type { Request } from 'express';
 
-const FALLBACK_PUBLIC_URL =
-  'https://ais-pre-qqdodvcmphbf4x73jjyqzm-1003992167908.asia-southeast1.run.app';
+export const DEFAULT_CANONICAL_ORIGIN = 'https://powerwang.xyz';
 
 // Strict RFC-safe host[:port] check to prevent host header injection or CRLF/path tricks
 const VALID_HOST_HEADER_RE =
@@ -24,11 +23,7 @@ export function parseValidHttpUrl(raw?: string | null): URL | null {
 }
 
 export function resolveEnvBaseUrl(): string {
-  const candidates = [
-    process.env.SITE_URL,
-    process.env.CANONICAL_URL,
-    process.env.APP_URL,
-  ];
+  const candidates = [process.env.SITE_URL, process.env.CANONICAL_URL];
 
   for (const candidate of candidates) {
     const parsed = parseValidHttpUrl(candidate);
@@ -37,7 +32,7 @@ export function resolveEnvBaseUrl(): string {
     }
   }
 
-  return FALLBACK_PUBLIC_URL;
+  return DEFAULT_CANONICAL_ORIGIN;
 }
 
 function getAllowedHostPatterns(): string[] {
@@ -46,28 +41,16 @@ function getAllowedHostPatterns(): string[] {
     .map((h) => h.trim().toLowerCase())
     .filter(Boolean);
 
-  const appUrl = parseValidHttpUrl(process.env.APP_URL);
-  if (appUrl) {
-    configured.push(appUrl.hostname.toLowerCase());
-  }
-
+  configured.push('powerwang.xyz', 'www.powerwang.xyz');
   return configured;
 }
 
-function isLocalHostname(hostname: string): boolean {
+function isTrustedCustomHostname(hostname: string): boolean {
   const lower = hostname.toLowerCase();
-  return lower === 'localhost' || lower === '127.0.0.1' || lower === '[::1]';
-}
-
-function isTrustedHostname(hostname: string): boolean {
-  const lower = hostname.toLowerCase();
-  if (isLocalHostname(lower)) return true;
-  if (lower.endsWith('.run.app')) return true;
-
   const allowlist = getAllowedHostPatterns();
   for (const pattern of allowlist) {
     if (pattern.startsWith('*.')) {
-      const suffix = pattern.slice(1); // ".example.com"
+      const suffix = pattern.slice(1);
       if (lower.endsWith(suffix) && lower.length > suffix.length) {
         return true;
       }
@@ -75,7 +58,6 @@ function isTrustedHostname(hostname: string): boolean {
       return true;
     }
   }
-
   return false;
 }
 
@@ -103,33 +85,29 @@ export function resolveRequestBaseUrl(req?: Request): string {
     return explicitSiteUrl.origin;
   }
 
-  if (!req) {
-    return resolveEnvBaseUrl();
-  }
+  if (req) {
+    const forwardedHost = extractFirstHeaderValue(req.headers['x-forwarded-host']);
+    const directHost = extractFirstHeaderValue(req.headers.host);
+    const candidateHost = forwardedHost || directHost;
 
-  const forwardedHost = extractFirstHeaderValue(req.headers['x-forwarded-host']);
-  const directHost = extractFirstHeaderValue(req.headers.host);
-  const candidateHost = forwardedHost || directHost;
+    if (candidateHost && VALID_HOST_HEADER_RE.test(candidateHost)) {
+      const hostnameOnly = stripPort(candidateHost);
+      if (isTrustedCustomHostname(hostnameOnly)) {
+        const forwardedProto = extractFirstHeaderValue(
+          req.headers['x-forwarded-proto']
+        ).toLowerCase();
 
-  if (candidateHost && VALID_HOST_HEADER_RE.test(candidateHost)) {
-    const hostnameOnly = stripPort(candidateHost);
-    if (isTrustedHostname(hostnameOnly)) {
-      const forwardedProto = extractFirstHeaderValue(
-        req.headers['x-forwarded-proto']
-      ).toLowerCase();
+        const proto: 'http' | 'https' =
+          forwardedProto === 'http' || forwardedProto === 'https'
+            ? forwardedProto
+            : req.protocol === 'http'
+              ? 'http'
+              : 'https';
 
-      let proto: 'http' | 'https';
-      if (forwardedProto === 'https' || forwardedProto === 'http') {
-        proto = forwardedProto;
-      } else if (req.protocol === 'https') {
-        proto = 'https';
-      } else {
-        proto = isLocalHostname(hostnameOnly) ? 'http' : 'https';
+        return `${proto}://${candidateHost}`;
       }
-
-      return `${proto}://${candidateHost}`;
     }
   }
 
-  return resolveEnvBaseUrl();
+  return DEFAULT_CANONICAL_ORIGIN;
 }

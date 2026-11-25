@@ -137,7 +137,17 @@ export default function App() {
     const robots = seo
       ? 'index, follow, max-image-preview:large'
       : NOT_FOUND_SEO.robots;
-    const origin = window.location.origin;
+    const existingCanonical = document.head
+      .querySelector('link[rel="canonical"]')
+      ?.getAttribute('href');
+    let origin = 'https://powerwang.xyz';
+    if (existingCanonical) {
+      try {
+        origin = new URL(existingCanonical).origin;
+      } catch {
+        origin = 'https://powerwang.xyz';
+      }
+    }
     const canonicalHref = `${origin}${seo ? seo.path : currentPath}`;
 
     document.title = title;
