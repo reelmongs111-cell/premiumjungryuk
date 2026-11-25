@@ -29,7 +29,7 @@ export const CONTENT_LASTMOD = '2026-11-24';
 
 export const MAIN_PAGE_TITLE = '정력원 | 프리미엄 중년 남성 활력 케어';
 export const MAIN_PAGE_DESCRIPTION =
-  '40~60대 한국 중년 남성을 위한 프리미엄 활력 브랜드 정력원. 국내산 6년근 홍삼 농축액, 아연, 옥타코사놀 등 검증된 원료 기반의 데일리 활력 케어와 품격 있는 라이프스타일, 365일 무료 프라이빗 상담을 만나보세요.';
+  '40~60대 한국 중년 남성을 위한 프리미엄 활력 영양제 브랜드 정력원. 아연, L-아르기닌, 옥타코사놀 등 검증된 원료 기반의 중년 남성 활력 케어와 품격 있는 라이프스타일, 365일 무료 프라이빗 상담을 만나보세요.';
 
 export const DEFAULT_OG_IMAGE_PATH =
   '/src/assets/images/hero_korean_gentleman_fit_1795566944337.jpg';
@@ -47,7 +47,7 @@ export const SEO_PAGES: SeoPageConfig[] = [
     title: MAIN_PAGE_TITLE,
     description: MAIN_PAGE_DESCRIPTION,
     keywords:
-      '정력원, 중년 남성 활력, 4050 남성 건강, 6년근 홍삼, 아연, 옥타코사놀, 남성 라이프스타일, 정력원 블랙 리저브',
+      '정력원, 중년 남성 활력 영양제, 중년 남성 활력 케어, 4050 남성 건강, 아연, L-아르기닌, 옥타코사놀, 정력원 블랙 리저브',
     lastmod: CONTENT_LASTMOD,
     changefreq: 'weekly',
     priority: '1.0',
@@ -129,10 +129,10 @@ export const SEO_PAGES: SeoPageConfig[] = [
   },
   {
     path: '/products/jeongryeokwon-black-elixir',
-    title: '정력원 블랙 리저브 엘릭서 | 6년근 홍삼·아연 활력 캡슐',
+    title: '정력원 블랙 리저브 엘릭서 | 아연·아르기닌 중년 남성 활력 영양제',
     description:
-      '대한민국 금산산 6년근 홍삼 농축분말(진세노사이드 10mg), 프랑스산 글루콘산 아연, L-아르기닌, 비타민 B군을 담은 정력원 대표 30일분 데일리 캡슐 상세 정보입니다.',
-    keywords: '정력원 블랙 리저브 엘릭서, 6년근 홍삼 농축분말, 글루콘산 아연, L-아르기닌',
+      'L-아르기닌, 프랑스산 글루콘산 아연, 타우린, 비타민 B군을 균형 있게 담은 정력원 대표 30일분 중년 남성 활력 영양제 데일리 케어 상세 정보입니다.',
+    keywords: '정력원 블랙 리저브 엘릭서, 중년 남성 활력 영양제, 글루콘산 아연, L-아르기닌',
     lastmod: CONTENT_LASTMOD,
     changefreq: 'monthly',
     priority: '0.8',
